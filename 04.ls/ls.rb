@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
-COL = 3
+require 'optparse'
+
 @files = Dir.glob('*').sort
+
+opt = OptionParser.new
+opt.on('-a') { @files = Dir.glob('*', File::FNM_DOTMATCH).sort }
+opt.parse(ARGV)
+
+COL = 3
 element_number = @files.size / COL
 remainder = @files.size % COL
 
