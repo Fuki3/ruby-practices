@@ -2,13 +2,13 @@
 
 require 'optparse'
 
-@files = Dir.glob('*').sort
+COL = 3
 
 opt = OptionParser.new
-opt.on('-a') { @files = Dir.glob('*', File::FNM_DOTMATCH).sort }
+opt.on('-a') {}
 opt.parse(ARGV)
 
-COL = 3
+@files = ARGV.empty? ? Dir.glob('*').sort : Dir.glob('*', File::FNM_DOTMATCH).sort
 element_number = @files.size / COL
 remainder = @files.size % COL
 
