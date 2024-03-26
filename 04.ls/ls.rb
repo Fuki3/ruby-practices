@@ -5,10 +5,11 @@ require 'optparse'
 COL = 3
 
 opt = OptionParser.new
-opt.on('-a') {}
+params = {}
+opt.on('-a') { |v| params[:a] = v }
 opt.parse(ARGV)
 
-@files = ARGV.empty? ? Dir.glob('*').sort : Dir.glob('*', File::FNM_DOTMATCH).sort
+@files = params == { a: true } ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
 element_number = @files.size / COL
 remainder = @files.size % COL
 
