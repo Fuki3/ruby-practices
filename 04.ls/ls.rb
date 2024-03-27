@@ -7,9 +7,11 @@ COL = 3
 opt = OptionParser.new
 params = {}
 opt.on('-a') { |v| params[:a] = v }
+opt.on('-r') { |v| params[:r] = v }
 opt.parse(ARGV)
 
 @files = params == { a: true } ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
+@files = @files.sort.reverse if params == { r: true }
 element_number = @files.size / COL
 remainder = @files.size % COL
 
