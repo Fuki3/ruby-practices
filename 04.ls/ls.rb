@@ -17,73 +17,79 @@ opt.parse(ARGV)
 element_number = @files.size / COL
 remainder = @files.size % COL
 
+def bytesize(array_element)
+  array_element.encode('EUC-JP').bytesize
+end
+
+def slice(first, final, element_count)
+  @files[first..final].each_slice(element_count).to_a
+end
+
+def replace01
+  @replace_file_type = {
+    '01' => 'p',
+    '02' => 'c',
+    '04' => 'd',
+    '06' => 'b',
+    '10' => '-',
+    '12' => 'l',
+    '14' => 's'
+  }.freeze
+end
+
+def replace234
+  @replace_access_privilege = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }.freeze
+end
+
 if params == { l: true }
+
+  puts "total #{@files.map { |file| File.stat(file).blocks }.sum}"
+
   file_type_eight = @files.map { |file| File.stat(file).mode.to_s(8) }
-  file_type = []
-  file_type_eight.each do |file|
-    file[0..1] == '01' && file[0..1] = 'p'
-    file[0..1] == '02' && file[0..1] = 'c'
-    file[0..1] == '04' && file[0..1] = 'd'
-    file[0..1] == '06' && file[0..1] = 'b'
-    file[0..1] == '10' && file[0..1] = '-'
-    file[0..1] == '12' && file[0..1] = 'l'
-    file[0..1] == '14' && file[0..1] = 's'
-    i = 2
-    while i < 9
-      file[i] = case file[i]
-                when '0' then '---'
-                when '1' then '--x'
-                when '2' then '-w-'
-                when '3' then '-wx'
-                when '4' then 'r--'
-                when '5' then 'r-x'
-                when '6' then 'rw-'
-                else 'rwx'
-                end
-      i += 3
+  file_types = []
+  file_type_eight.each do |file_type|
+    replace01
+    file_type[0..1] = @replace_file_type[file_type[0..1]]
+
+    replace234
+    [2, 5, 8].each do |i|
+      file_type[i] = file_type[i].gsub(file_type[i], @replace_access_privilege)
     end
-    file[10] = file[10] == 'x' ? 't' : 'T' if file[1] == '1'
-    file[7] = file[7] == 'x' ? 's' : 'S' if file[1] == '2'
-    file[4] = file[4] == 'x' ? 's' : 'S' if file[1] == '4'
-    file_type << "#{file.slice(0)}#{file.slice(2..10)} "
+
+    file_type[10] = file_type[10] == 'x' ? 't' : 'T' if file_type[1] == '1'
+    file_type[7] = file_type[7] == 'x' ? 's' : 'S' if file_type[1] == '2'
+    file_type[4] = file_type[4] == 'x' ? 's' : 'S' if file_type[1] == '4'
+    file_types << "#{file_type.slice(0)}#{file_type.slice(2..10)} "
   end
 
-  file_blocks = @files.map { |file| File.stat(file).blocks }.sum
-  file_nlink_without_space = @files.map { |file| File.stat(file).nlink.to_s }
-  file_nlink = file_nlink_without_space.map { |file| ' ' * (file_nlink_without_space.max.size - file.size) + file }
-  file_owner_wituout_space = @files.map { |file| File.stat(file).uid }.map { |file| Etc.getpwuid(file).name }
-  file_owner = file_owner_wituout_space.map { |file| file + ' ' * (file_owner_wituout_space.max.size - file.size + 1) }
-  file_group_wituout_space = @files.map { |file| File.stat(file).gid }.map { |file| Etc.getgrgid(file).name }
-  file_group = file_group_wituout_space.map { |file| file + ' ' * (file_group_wituout_space.max.size - file.size + 1) }
-  file_size_without_space = @files.map { |file| File.stat(file).size.to_s }
-  file_size = file_size_without_space.map { |file| ' ' * (file_size_without_space.max.size - file.size) + file }
-  file_month = @files.map { |file| File.stat(file).mtime.to_s[5..6] }
-  file_month.map { |file| file[0] = ' ' if file[0] == '0' }
-  file_day = @files.map { |file| File.stat(file).mtime.to_s[8..9] }
-  file_day.map { |file| file[0] = ' ' if file[0] == '0' }
-  file_time = @files.map { |file| File.stat(file).mtime.to_s[11..15] }
-  file_l_element = [file_type] + [file_nlink] + [file_owner] + [file_group] + [file_size] + [file_month] + [file_day] + [file_time] + [@files]
+  file_nlink_max = @files.map { |file| File.stat(file).nlink.to_s }.max.size
+  file_owner_max = @files.map { |file| File.stat(file).uid }.map { |file| Etc.getpwuid(file).name }.max.size
+  file_group_max = @files.map { |file| File.stat(file).gid }.map { |file| Etc.getgrgid(file).name }.max.size
+  file_size_max = @files.map { |file| File.stat(file).size.to_s }.max.size
 
-  file_l = Array.new(@files.size) do |t|
-    file_l_element.map { |file| file[t] }
-  end
-
-  puts "total #{file_blocks}"
-
-  n = 0
-  while n < @files.size
-    puts file_l[n].join(' ')
-    n += 1
+  @files.map.with_index do |file, i|
+    file_nlink = ' ' * (file_nlink_max - File.stat(file).nlink.to_s.size) + File.stat(file).nlink.to_s
+    file_owner = Etc.getpwuid(File.stat(file).uid).name + ' ' * (file_owner_max - Etc.getpwuid(File.stat(file).uid).name.size + 1)
+    file_group = Etc.getgrgid(File.stat(file).gid).name + ' ' * (file_group_max - Etc.getgrgid(File.stat(file).gid).name.size + 1)
+    file_size = ' ' * (file_size_max - File.stat(file).size.to_s.size) + File.stat(file).size.to_s
+    file_month = File.stat(file).mtime.to_s[5..6]
+    file_month[0] = ' ' if file_month[0] == '0'
+    file_day = File.stat(file).mtime.to_s[8..9]
+    file_day[0] = ' ' if file_day[0] == '0'
+    file_time = File.stat(file).mtime.to_s[11..15]
+    puts [[file_types[i]] + [file_nlink] + [file_owner] + [file_group] + [file_size] + [file_month] + [file_day] + [file_time] + [file]].join(' ')
   end
 
 else
-  def bytesize(array_element)
-    array_element.encode('EUC-JP').bytesize
-  end
-
-  def slice(first, final, element_count)
-    @files[first..final].each_slice(element_count).to_a
-  end
 
   file_size_max = @files.map { |file| bytesize(file) }.max
 
