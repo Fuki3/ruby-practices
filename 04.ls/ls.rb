@@ -5,6 +5,27 @@ require 'etc'
 
 COL = 3
 
+REPLACE_FILE_TYPE = {
+  '01' => 'p',
+  '02' => 'c',
+  '04' => 'd',
+  '06' => 'b',
+  '10' => '-',
+  '12' => 'l',
+  '14' => 's'
+}.freeze
+
+REPLACE_ACCESS_PRIVILEGE = {
+  '0' => '---',
+  '1' => '--x',
+  '2' => '-w-',
+  '3' => '-wx',
+  '4' => 'r--',
+  '5' => 'r-x',
+  '6' => 'rw-',
+  '7' => 'rwx'
+}.freeze
+
 opt = OptionParser.new
 params = {}
 opt.on('-a') { |v| params[:a] = v }
@@ -26,67 +47,44 @@ def slice(first, final, element_count)
 end
 
 def replace01
-  @replace_file_type = {
-    '01' => 'p',
-    '02' => 'c',
-    '04' => 'd',
-    '06' => 'b',
-    '10' => '-',
-    '12' => 'l',
-    '14' => 's'
-  }.freeze
+  REPLACE_FILE_TYPE
 end
 
 def replace234
-  @replace_access_privilege = {
-    '0' => '---',
-    '1' => '--x',
-    '2' => '-w-',
-    '3' => '-wx',
-    '4' => 'r--',
-    '5' => 'r-x',
-    '6' => 'rw-',
-    '7' => 'rwx'
-  }.freeze
+  REPLACE_ACCESS_PRIVILEGE
 end
 
 if params == { l: true }
 
   puts "total #{@files.map { |file| File.stat(file).blocks }.sum}"
 
-  file_type_eight = @files.map { |file| File.stat(file).mode.to_s(8) }
-  file_types = []
-  file_type_eight.each do |file_type|
-    replace01
-    file_type[0..1] = @replace_file_type[file_type[0..1]]
-
-    replace234
-    [2, 5, 8].each do |i|
-      file_type[i] = file_type[i].gsub(file_type[i], @replace_access_privilege)
-    end
-
-    file_type[10] = file_type[10] == 'x' ? 't' : 'T' if file_type[1] == '1'
-    file_type[7] = file_type[7] == 'x' ? 's' : 'S' if file_type[1] == '2'
-    file_type[4] = file_type[4] == 'x' ? 's' : 'S' if file_type[1] == '4'
-    file_types << "#{file_type.slice(0)}#{file_type.slice(2..10)} "
-  end
-
   file_nlink_max = @files.map { |file| File.stat(file).nlink.to_s }.max.size
-  file_owner_max = @files.map { |file| File.stat(file).uid }.map { |file| Etc.getpwuid(file).name }.max.size
-  file_group_max = @files.map { |file| File.stat(file).gid }.map { |file| Etc.getgrgid(file).name }.max.size
-  file_size_max = @files.map { |file| File.stat(file).size.to_s }.max.size
+  file_owner_max = @files.map { |file| Etc.getpwuid(File.stat(file).uid).name }.max.size
+  file_group_max = @files.map { |file| Etc.getgrgid(File.stat(file).gid).name }.max.size
+  file_size_max = @files.map { |file| File.stat(file).size.to_s.size }.max
 
-  @files.map.with_index do |file, i|
-    file_nlink = ' ' * (file_nlink_max - File.stat(file).nlink.to_s.size) + File.stat(file).nlink.to_s
-    file_owner = Etc.getpwuid(File.stat(file).uid).name + ' ' * (file_owner_max - Etc.getpwuid(File.stat(file).uid).name.size + 1)
-    file_group = Etc.getgrgid(File.stat(file).gid).name + ' ' * (file_group_max - Etc.getgrgid(File.stat(file).gid).name.size + 1)
-    file_size = ' ' * (file_size_max - File.stat(file).size.to_s.size) + File.stat(file).size.to_s
-    file_month = File.stat(file).mtime.to_s[5..6]
+  @files.each.with_index do |file, _idx|
+    file_stat = File.stat(file)
+    file_type_eight = format('%06d', file_stat.mode.to_s(8))
+    replace01
+    file_type_eight[0..1] = replace01[file_type_eight[0..1]]
+    replace234
+    file_type_eight[2..4] = file_type_eight[2..4].gsub(/\d/, REPLACE_ACCESS_PRIVILEGE)
+    file_type_eight[10] = file_type_eight[10] == 'x' ? 't' : 'T' if file_type_eight[1] == '1'
+    file_type_eight[7] = file_type_eight[7] == 'x' ? 's' : 'S' if file_type_eight[1] == '2'
+    file_type_eight[4] = file_type_eight[4] == 'x' ? 's' : 'S' if file_type_eight[1] == '4'
+
+    file_nlink = ' ' * (file_nlink_max - file_stat.nlink.to_s.size) + file_stat.nlink.to_s
+    file_owner = Etc.getpwuid(file_stat.uid).name + ' ' * (file_owner_max - Etc.getpwuid(file_stat.uid).name.size + 1)
+    file_group = Etc.getgrgid(file_stat.gid).name + ' ' * (file_group_max - Etc.getgrgid(file_stat.gid).name.size + 1)
+    file_size = ' ' * (file_size_max - file_stat.size.to_s.size) + file_stat.size.to_s
+    file_month = file_stat.mtime.to_s[5..6]
     file_month[0] = ' ' if file_month[0] == '0'
-    file_day = File.stat(file).mtime.to_s[8..9]
+    file_day = file_stat.mtime.to_s[8..9]
     file_day[0] = ' ' if file_day[0] == '0'
-    file_time = File.stat(file).mtime.to_s[11..15]
-    puts [[file_types[i]] + [file_nlink] + [file_owner] + [file_group] + [file_size] + [file_month] + [file_day] + [file_time] + [file]].join(' ')
+    file_time = file_stat.mtime.to_s[11..15]
+    puts ["#{file_type_eight.slice(0)}#{file_type_eight.slice(2..10)} ", file_nlink, file_owner, file_group, file_size, file_month, file_day, file_time,
+          file].join(' ')
   end
 
 else
