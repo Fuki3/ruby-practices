@@ -33,8 +33,8 @@ opt.on('-r') { |v| params[:r] = v }
 opt.on('-l') { |v| params[:l] = v }
 opt.parse(ARGV)
 
-@files = params == { a: true } ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
-@files = @files.sort.reverse if params == { r: true }
+@files = params[:a] == true ? Dir.glob('*', File::FNM_DOTMATCH).sort : Dir.glob('*').sort
+@files = @files.sort.reverse if params[:r] == true
 element_number = @files.size / COL
 remainder = @files.size % COL
 
@@ -46,11 +46,11 @@ def slice(first, final, element_count)
   @files[first..final].each_slice(element_count).to_a
 end
 
-if params == { l: true }
+if params[:l] == true
 
   puts "total #{@files.map { |file| File.stat(file).blocks }.sum}"
 
-  file_nlink_max = @files.map { |file| File.stat(file).nlink.to_s }.max.size
+  file_nlink_max = @files.map { |file| File.stat(file).nlink.to_s.size }.max
   file_owner_max = @files.map { |file| Etc.getpwuid(File.stat(file).uid).name }.max.size
   file_group_max = @files.map { |file| Etc.getgrgid(File.stat(file).gid).name }.max.size
   file_size_max = @files.map { |file| File.stat(file).size.to_s.size }.max
