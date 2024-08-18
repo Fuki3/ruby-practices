@@ -2,43 +2,52 @@
 
 require 'optparse'
 
-def count(information)
+def params
   opt = OptionParser.new
   params = {}
   opt.on('-l') { |v| params[:l] = v }
   opt.on('-w') { |v| params[:w] = v }
   opt.on('-c') { |v| params[:c] = v }
   opt.parse(ARGV)
-  text_lines = information
+  params
+end
+
+def count(text_lines)
   text = text_lines.join
   lines_count = text_lines.size
   words_count = text.split(/\s+/).size
   characters_count = text_lines.join.size
-  @output = []
-  params = { l: true, c: true, w: true } if params == {}
-  { l: lines_count, w: words_count, c: characters_count }.each do |key, value|
-    @output.push(output(value)) if params[key] == true
+  { l: lines_count, w: words_count, c: characters_count }
+end
+
+def output_result(text_lines)
+  output = []
+  options = if params == {}
+              { l: true, c: true, w: true }
+            else
+              params
+            end
+  options_count = count(text_lines)
+  options_count.each do |key, value|
+    output.push(value) if options[key] == true
   end
+  output
 end
 
 def output(element)
   element.to_s.rjust(8)
 end
 
-if $stdin.isatty == false
-  count($stdin.readlines)
-  puts "#{@output.join} "
-else
+if $stdin.isatty
   output_sum = []
-  ARGV.each_with_index do |argument, idx|
-    File.exist?(argument) ? file = argument : next
-    count(File.readlines(file))
-    puts "#{@output.join} #{argument}"
-    output_sum_element = @output.map { |n| n.delete(' ').to_i }
-    output_sum << output_sum_element
-    if idx == ARGV.size - 1
-      output_sum = output_sum.transpose.map { |n| output(n.inject(:+)) }
-      puts "#{output_sum.join} total"
-    end
+  ARGV.each do |file|
+    next if File.exist?(file) == false
+
+    puts "#{output_result(File.readlines(file)).map { |n| output(n) }.join} #{file}"
+    output_sum << output_result(File.readlines(file))
   end
+  output_sum = output_sum.transpose.map { |n| output(n.inject(:+)) }
+  puts "#{output_sum.join} total"
+else
+  puts output_result($stdin.readlines).map { |n| output(n) }.join
 end
