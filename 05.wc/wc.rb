@@ -22,14 +22,10 @@ end
 
 def output_result(text_lines)
   output = []
-  options = if params == {}
-              { l: true, c: true, w: true }
-            else
-              params
-            end
+  options = params.empty? ? { l: true, c: true, w: true } : params
   options_count = count(text_lines)
   options_count.each do |key, value|
-    output.push(value) if options[key] == true
+    output.push(value) if options[key]
   end
   output
 end
@@ -43,8 +39,9 @@ if $stdin.isatty
   ARGV.each do |file|
     next if File.exist?(file) == false
 
-    puts "#{output_result(File.readlines(file)).map { |n| output(n) }.join} #{file}"
-    output_sum << output_result(File.readlines(file))
+    options_numbers = output_result(File.readlines(file))
+    puts "#{options_numbers.map { |n| output(n) }.join} #{file}"
+    output_sum << options_numbers
   end
   output_sum = output_sum.transpose.map { |n| output(n.inject(:+)) }
   puts "#{output_sum.join} total"
