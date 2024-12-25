@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Shot
-  def shots
+  def put_in_array
     score = ARGV[0]
     scores = score.split(',')
     shots = []

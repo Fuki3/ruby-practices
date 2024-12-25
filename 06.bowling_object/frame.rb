@@ -3,26 +3,26 @@
 require_relative 'shot'
 
 class Frame
-  def frames
+  def put_in_frames
     frames = []
 
-    Shot.new.shots.each_slice(2) do |s|
-      if Shot.new.shots.size > 20
+    Shot.new.put_in_array.each_slice(2) do |s|
+      if Shot.new.put_in_array.size > 20
         break if frames.size == 9
       else
         frames.size == 10
       end
       frames << s
     end
-    case Shot.new.shots.size
+    case Shot.new.put_in_array.size
     when 21
-      frames.push([Shot.new.shots[-3], Shot.new.shots[-2], Shot.new.shots[-1]])
+      frames.push([Shot.new.put_in_array[-3], Shot.new.put_in_array[-2], Shot.new.put_in_array[-1]])
     when 22
-      frames.push([Shot.new.shots[-4], Shot.new.shots[-2], Shot.new.shots[-1]])
+      frames.push([Shot.new.put_in_array[-4], Shot.new.put_in_array[-2], Shot.new.put_in_array[-1]])
     when 23
-      frames.push([Shot.new.shots[-5], Shot.new.shots[-3], Shot.new.shots[-1]])
+      frames.push([Shot.new.put_in_array[-5], Shot.new.put_in_array[-3], Shot.new.put_in_array[-1]])
     when 24
-      frames.push([Shot.new.shots[-6], Shot.new.shots[-4], Shot.new.shots[-2]])
+      frames.push([Shot.new.put_in_array[-6], Shot.new.put_in_array[-4], Shot.new.put_in_array[-2]])
     end
     frames
   end
