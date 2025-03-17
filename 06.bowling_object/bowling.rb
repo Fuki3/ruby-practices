@@ -2,6 +2,7 @@
 
 require_relative 'game'
 
-game = Game.new
+shots = ARGV[0].split(',')
 
-puts game.point
+game = Game.new(shots)
+puts game.caliculate_point

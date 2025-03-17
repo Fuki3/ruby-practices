@@ -3,23 +3,53 @@
 require_relative 'frame'
 
 class Game
-  def initialize
-    @point = point
+  def initialize(shots)
+    @shots = shots
   end
 
-  def point
-    point = 0
-    Frame.new.put_in_frames.first(9).each_with_index do |frame, index|
-      point += if frame[0] == 10 && Frame.new.put_in_frames[index + 1][0] == 10 && index != 8
-                 10 + Frame.new.put_in_frames[index + 1][0] + Frame.new.put_in_frames[index + 2][0]
-               elsif frame[0] == 10
-                 10 + Frame.new.put_in_frames[index + 1][0] + Frame.new.put_in_frames[index + 1][1]
-               elsif frame.sum == 10 # spare
-                 10 + Frame.new.put_in_frames[index + 1][0]
-               else
-                 frame.sum
-               end
+  def composition_by_frames
+    frames = []
+    frame = []
+    @shots.each do |s|
+      if frames.size < 10
+        frame << s
+        if frame.size == 2 || s == 'X'
+          frames << frame
+          frame = []
+        end
+      else
+        frames.last << s
+      end
     end
-    point += Frame.new.put_in_frames[9].sum
+    frames
+  end
+
+  def caliculate_point
+    @frames = composition_by_frames
+    point = 0
+    @frames.each_with_index do |frame, index|
+      frame_point = Frame.new(frame).caliculate_sum
+      if Frame.new(frame).strike? && index < 9
+        frame_point += caliculate_strike_points(index)
+      elsif Frame.new(frame).spare? && index < 9
+        frame_point += caliculate_spare_points(index)
+      end
+      point += frame_point
+    end
+    point
+  end
+
+  def caliculate_strike_points(index)
+    strike_points = Shot.new(@frames[index + 1][0]).convert_to_number
+    strike_points += if @frames[index + 1].size == 1
+                       Shot.new(@frames[index + 2][0]).convert_to_number
+                     else
+                       Shot.new(@frames[index + 1][1]).convert_to_number
+                     end
+    strike_points
+  end
+
+  def caliculate_spare_points(index)
+    Shot.new(@frames[index + 1][0]).convert_to_number
   end
 end
