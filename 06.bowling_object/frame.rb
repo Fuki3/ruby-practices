@@ -9,7 +9,7 @@ class Frame
     @third_shot = Shot.new(frame[2])
   end
 
-  def caliculate_sum
+  def score
     [
       @first_shot.convert_to_number,
       @second_shot.convert_to_number,
@@ -22,6 +22,6 @@ class Frame
   end
 
   def spare?
-    caliculate_sum == 10 && @first_shot.convert_to_number != 10
+    score == 10 && @first_shot.convert_to_number != 10
   end
 end

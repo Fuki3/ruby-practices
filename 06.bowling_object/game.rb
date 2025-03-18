@@ -7,7 +7,7 @@ class Game
     @shots = shots
   end
 
-  def composition_by_frames
+  def score
     frames = []
     frame = []
     @shots.each do |s|
@@ -25,10 +25,10 @@ class Game
   end
 
   def caliculate_point
-    @frames = composition_by_frames
+    @frames = score
     point = 0
     @frames.each_with_index do |frame, index|
-      frame_point = Frame.new(frame).caliculate_sum
+      frame_point = Frame.new(frame).score
       if Frame.new(frame).strike? && index < 9
         frame_point += caliculate_strike_points(index)
       elsif Frame.new(frame).spare? && index < 9
