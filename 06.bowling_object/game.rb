@@ -26,8 +26,7 @@ class Game
 
   def caliculate_point
     @frames = score
-    point = 0
-    @frames.each_with_index do |frame, index|
+    @frames.each_with_index.sum do |frame, index|
       frame_point = Frame.new(frame).score
       if index >= 9
         # 加算なし
@@ -36,9 +35,8 @@ class Game
       elsif Frame.new(frame).spare?
         frame_point += caliculate_spare_points(index)
       end
-      point += frame_point
+      frame_point
     end
-    point
   end
 
   def caliculate_strike_points(index)
