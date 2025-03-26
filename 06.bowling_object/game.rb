@@ -29,9 +29,11 @@ class Game
     point = 0
     @frames.each_with_index do |frame, index|
       frame_point = Frame.new(frame).score
-      if Frame.new(frame).strike? && index < 9
+      if index >= 9
+        # 加算なし
+      elsif Frame.new(frame).strike?
         frame_point += caliculate_strike_points(index)
-      elsif Frame.new(frame).spare? && index < 9
+      elsif Frame.new(frame).spare?
         frame_point += caliculate_spare_points(index)
       end
       point += frame_point
