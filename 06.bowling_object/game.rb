@@ -5,10 +5,10 @@ require_relative 'frame'
 class Game
   def initialize(shots)
     @shots = shots
-    @frames = score.map { |n| Frame.new(n) }
+    @frames = frames.map { |n| Frame.new(n) }
   end
 
-  def score
+  def frames
     frames = []
     frame = []
     @shots.each do |s|
@@ -25,7 +25,7 @@ class Game
     frames
   end
 
-  def caliculate_point
+  def score
     @frames.each_with_index.sum do |frame, index|
       frame_point = frame.score
       if index >= 9
@@ -40,12 +40,12 @@ class Game
   end
 
   def caliculate_strike_points(index)
-    strike_points = Shot.new(score[index + 1][0]).score
-    x, y = score[index + 1].size == 1 ? [2, 0] : [1, 1]
-    strike_points + Shot.new(score[index + x][y]).score
+    strike_points = Shot.new(frames[index + 1][0]).score
+    x, y = frames[index + 1].size == 1 ? [2, 0] : [1, 1]
+    strike_points + Shot.new(frames[index + x][y]).score
   end
 
   def caliculate_spare_points(index)
-    Shot.new(score[index + 1][0]).score
+    Shot.new(frames[index + 1][0]).score
   end
 end
