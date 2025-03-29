@@ -11,17 +11,17 @@ class Frame
 
   def score
     [
-      @first_shot.convert_to_number,
-      @second_shot.convert_to_number,
-      @third_shot.convert_to_number
-    ].sum
+      @first_shot,
+      @second_shot,
+      @third_shot
+    ].map(&:score).sum
   end
 
   def strike?
-    @first_shot.convert_to_number == 10
+    @first_shot.score == 10
   end
 
   def spare?
-    score == 10 && @first_shot.convert_to_number != 10
+    score == 10 && @first_shot.score != 10
   end
 end

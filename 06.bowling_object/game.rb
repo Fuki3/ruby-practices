@@ -40,12 +40,12 @@ class Game
   end
 
   def caliculate_strike_points(index)
-    strike_points = Shot.new(score[index + 1][0]).convert_to_number
+    strike_points = Shot.new(score[index + 1][0]).score
     x, y = score[index + 1].size == 1 ? [2, 0] : [1, 1]
-    strike_points + Shot.new(score[index + x][y]).convert_to_number
+    strike_points + Shot.new(score[index + x][y]).score
   end
 
   def caliculate_spare_points(index)
-    Shot.new(score[index + 1][0]).convert_to_number
+    Shot.new(score[index + 1][0]).score
   end
 end
