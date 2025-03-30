@@ -40,12 +40,12 @@ class Game
   end
 
   def caliculate_strike_points(index)
-    strike_points = Shot.new(frames[index + 1][0]).score
-    x, y = frames[index + 1].size == 1 ? [2, 0] : [1, 1]
-    strike_points + Shot.new(frames[index + x][y]).score
+    strike_points = @frames[index].first_shot.score
+    x, y = frames[index + 1].size == 1 ? [2, :first_shot] : [1, :second_shot]
+    strike_points + @frames[index + x].send(y).score
   end
 
   def caliculate_spare_points(index)
-    Shot.new(frames[index + 1][0]).score
+    @frames[index].first_shot.score
   end
 end
