@@ -31,21 +31,11 @@ class Game
       if index >= 9
         # 加算なし
       elsif frame.strike?
-        frame_point += caliculate_strike_points(index)
+        frame_point += frame.caliculate_strike_points(index, @frames)
       elsif frame.spare?
-        frame_point += caliculate_spare_points(index)
+        frame_point += frame.caliculate_spare_points(index, @frames)
       end
       frame_point
     end
-  end
-
-  def caliculate_strike_points(index)
-    strike_points = @frames[index].first_shot.score
-    x, y = frames[index + 1].size == 1 ? [2, :first_shot] : [1, :second_shot]
-    strike_points + @frames[index + x].send(y).score
-  end
-
-  def caliculate_spare_points(index)
-    @frames[index].first_shot.score
   end
 end

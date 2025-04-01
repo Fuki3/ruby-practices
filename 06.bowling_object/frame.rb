@@ -26,4 +26,15 @@ class Frame
   def spare?
     score == 10 && @first_shot.score != 10
   end
+
+  def caliculate_strike_points(index, frames)
+    next_frame = frames[index + 1]
+    strike_points = next_frame.first_shot.score
+    x, y = next_frame.strike? && index < 8 ? [2, :first_shot] : [1, :second_shot]
+    strike_points + frames[index + x].send(y).score
+  end
+
+  def caliculate_spare_points(index, frames)
+    frames[index + 1].first_shot.score
+  end
 end
