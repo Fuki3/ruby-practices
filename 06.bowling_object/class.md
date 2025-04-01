@@ -1,14 +1,14 @@
 - shot
   - initialize
-  - convert_to_number
+  - score
 - frame
   - initialize
-  - caliculate_sum
+  - score
   - strike?
   - spare?
-- game
-  - initialize
-  - composition_by_frames
-  - caliculate_point
   - caliculate_strike_points
   - caliculate_spare_points
+- game
+  - initialize
+  - frames
+  - score
