@@ -5,7 +5,7 @@ require_relative 'frame'
 class Game
   def initialize(shots)
     @shots = shots
-    @frames = frames.map { |n| Frame.new(n) }
+    @frames = frames
   end
 
   def frames
@@ -22,7 +22,7 @@ class Game
         frames.last << s
       end
     end
-    frames
+    frames.map { |n| Frame.new(n) }
   end
 
   def score
