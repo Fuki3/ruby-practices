@@ -29,8 +29,8 @@ class Frame
 
   def caliculate_strike_points(index, next_frame, after_next_frame)
     strike_points = next_frame.first_shot.score
-    x, y = next_frame.strike? && index < 8 ? [after_next_frame, :first_shot] : [next_frame, :second_shot]
-    strike_points + x.send(y).score
+    second_add_shot = next_frame.strike? && index < 8 ? after_next_frame.first_shot : next_frame.second_shot
+    strike_points + second_add_shot.score
   end
 
   def caliculate_spare_points(next_frame)
