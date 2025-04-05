@@ -1,0 +1,14 @@
+- shot
+  - initialize
+  - score
+- frame
+  - initialize
+  - score
+  - strike?
+  - spare?
+  - caliculate_strike_points
+  - caliculate_spare_points
+- game
+  - initialize
+  - frames
+  - score
