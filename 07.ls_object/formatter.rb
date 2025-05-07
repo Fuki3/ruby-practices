@@ -5,12 +5,11 @@ require_relative 'filedetail'
 COL = 3
 
 class Formatter
-  def initialize(files, myfile, params)
+  def initialize(files, myfile)
     @myfile = myfile
     @files = files
     @element_number = files.size / COL
     @remainder = files.size % COL
-    @option = Option.new(params)
   end
 
   def set_a_row
@@ -43,8 +42,8 @@ class Formatter
     end
   end
 
-  def output
-    if @option.l?
+  def output(params)
+    if params[:l]
       FileDetail.new(@files).set_filedetail
     else
       format_without_l_option

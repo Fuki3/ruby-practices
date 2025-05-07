@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'option'
-
 class MyFile
   attr_reader :files
 
   def initialize(params)
-    option = Option.new(params)
-    @files = option.a? ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-    @files = option.r? ? @files.sort.reverse : @files.sort
+    @files = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    @files = params[:r] ? @files.sort.reverse : @files.sort
   end
 
   def count_bytesize(array_element)

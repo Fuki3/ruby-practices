@@ -16,6 +16,6 @@ class Ls
 
   myfile = MyFile.new(params)
   files = myfile.files
-  formatter = Formatter.new(files, myfile, params)
-  formatter.output
+  formatter = Formatter.new(files, myfile)
+  formatter.output(params)
 end
