@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'filedetail'
-
 COL = 3
 
 class Formatter
@@ -44,7 +42,7 @@ class Formatter
 
   def output(params)
     if params[:l]
-      FileDetail.new(@files).set_filedetail
+      @myfile.set_filedetail
     else
       format_without_l_option
     end
