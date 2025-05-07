@@ -5,8 +5,6 @@ require 'etc'
 require_relative 'formatter'
 require_relative 'myfile'
 class Ls
-  attr_reader :params
-
   opt = OptionParser.new
   params = {}
   opt.on('-a') { |v| params[:a] = v }
