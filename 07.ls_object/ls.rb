@@ -3,7 +3,7 @@
 require 'optparse'
 require 'etc'
 require_relative 'formatter'
-require_relative 'myfile'
+require_relative 'fileinfo'
 class Ls
   opt = OptionParser.new
   params = {}
@@ -12,8 +12,8 @@ class Ls
   opt.on('-l') { |v| params[:l] = v }
   opt.parse(ARGV)
 
-  myfile = MyFile.new(params)
-  files = myfile.files
-  formatter = Formatter.new(files, myfile)
+  fileinfo = FileInfo.new(params)
+  files = fileinfo.files
+  formatter = Formatter.new(files, fileinfo)
   formatter.output(params)
 end

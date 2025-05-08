@@ -21,7 +21,7 @@ REPLACE_ACCESS_PRIVILEGE = {
   '7' => 'rwx'
 }.freeze
 
-class MyFile
+class FileInfo
   attr_reader :files
 
   def initialize(params)

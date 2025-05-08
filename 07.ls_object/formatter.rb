@@ -3,30 +3,30 @@
 COL = 3
 
 class Formatter
-  def initialize(files, myfile)
-    @myfile = myfile
+  def initialize(files, fileinfo)
+    @fileinfo = fileinfo
     @files = files
     @element_number = files.size / COL
     @remainder = files.size % COL
   end
 
   def set_a_row
-    @files.map { |file| "#{file}#{' ' * (@myfile.count_size_max - @myfile.count_bytesize(file))} " }
+    @files.map { |file| "#{file}#{' ' * (@fileinfo.count_size_max - @fileinfo.count_bytesize(file))} " }
   end
 
   def set_include_remainder
-    col_array_include_remainder = @myfile.slice(0, ((@element_number + 1) * (@files.size / (@element_number + 1))) - 1, @element_number + 1)
-    col_array_without_remainder = @myfile.slice(((@element_number + 1) * (@files.size / (@element_number + 1))), -1, @element_number + 1)
+    col_array_include_remainder = @fileinfo.slice(0, ((@element_number + 1) * (@files.size / (@element_number + 1))) - 1, @element_number + 1)
+    col_array_without_remainder = @fileinfo.slice(((@element_number + 1) * (@files.size / (@element_number + 1))), -1, @element_number + 1)
     col_array = col_array_include_remainder + col_array_without_remainder
     Array.new((@element_number + 1)) do |m|
-      col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (@myfile.count_size_max - @myfile.count_bytesize(p))} " }
+      col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (@fileinfo.count_size_max - @fileinfo.count_bytesize(p))} " }
     end
   end
 
   def set_without_remainder
     col_array = @files.each_slice(@element_number)
     Array.new(@element_number) do |m|
-      col_array.map { |k| "#{k[m]}#{' ' * (@myfile.count_size_max - @myfile.count_bytesize(k[m]))} " }
+      col_array.map { |k| "#{k[m]}#{' ' * (@fileinfo.count_size_max - @fileinfo.count_bytesize(k[m]))} " }
     end
   end
 
@@ -42,7 +42,7 @@ class Formatter
 
   def output(params)
     if params[:l]
-      @myfile.set_filedetail
+      @fileinfo.set_filedetail
     else
       format_without_l_option
     end
