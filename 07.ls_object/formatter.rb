@@ -1,48 +1,75 @@
 # frozen_string_literal: true
 
+require_relative 'fileinfo'
+
 COL = 3
 
 class Formatter
-  def initialize(files, fileinfo)
-    @fileinfo = fileinfo
-    @files = files
-    @element_number = files.size / COL
-    @remainder = files.size % COL
+  def initialize(params)
+    @params = params
+    @names = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    @names = @names.reverse if params[:r]
+    @element_number = @names.size / COL
+  end
+
+  def bytesize_max
+    @names.map { |name| name.encode('EUC-JP').bytesize }.max
+  end
+
+  def slice(first, final, element_count)
+    @names[first..final].each_slice(element_count).to_a
   end
 
   def set_a_row
-    @files.map { |file| "#{file}#{' ' * (@fileinfo.count_size_max - @fileinfo.count_bytesize(file))} " }
+    @names.map { |name| "#{name}#{' ' * (bytesize_max - name.encode('EUC-JP').bytesize)} " }
   end
 
   def set_include_remainder
-    col_array_include_remainder = @fileinfo.slice(0, ((@element_number + 1) * (@files.size / (@element_number + 1))) - 1, @element_number + 1)
-    col_array_without_remainder = @fileinfo.slice(((@element_number + 1) * (@files.size / (@element_number + 1))), -1, @element_number + 1)
+    col_array_include_remainder = slice(0, ((@element_number + 1) * (@names.size / (@element_number + 1))) - 1, @element_number + 1)
+    col_array_without_remainder = slice(((@element_number + 1) * (@names.size / (@element_number + 1))), -1, @element_number + 1)
     col_array = col_array_include_remainder + col_array_without_remainder
     Array.new((@element_number + 1)) do |m|
-      col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (@fileinfo.count_size_max - @fileinfo.count_bytesize(p))} " }
+      col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (bytesize_max - p.encode('EUC-JP').bytesize)} " }
     end
   end
 
   def set_without_remainder
-    col_array = @files.each_slice(@element_number)
+    col_array = @names.each_slice(@element_number)
     Array.new(@element_number) do |m|
-      col_array.map { |k| "#{k[m]}#{' ' * (@fileinfo.count_size_max - @fileinfo.count_bytesize(k[m]))} " }
+      col_array.map { |k| "#{k[m]}#{' ' * (bytesize_max - (k[m]).encode('EUC-JP').bytesize)} " }
     end
   end
 
   def format_without_l_option
-    if @files.size <= COL
+    if @names.size <= COL
       puts set_a_row.join
-    elsif @remainder.zero?
+    elsif (@names.size % COL).zero?
       set_without_remainder.map { |array| puts array.map(&:to_s).join }
     else
       set_include_remainder.map { |array| puts array.map(&:to_s).join }
     end
   end
 
-  def output(params)
-    if params[:l]
-      @fileinfo.set_filedetail
+  def format_with_l_option
+    @nlink_max = @names.map { |name| FileInfo.new(name).nlink.size }.max
+    @owner_max = @names.map { |name| FileInfo.new(name).owner }.max.size
+    @group_max = @names.map { |name| FileInfo.new(name).group }.max.size
+    @size_max = @names.map { |name| FileInfo.new(name).size.to_s.size }.max
+    @names.each do |name|
+      fileinfo = FileInfo.new(name)
+      nlink = ' ' * (@nlink_max - fileinfo.nlink.size) + fileinfo.nlink
+      owner = fileinfo.owner + ' ' * (@owner_max - fileinfo.owner.size + 1)
+      group = fileinfo.group + ' ' * (@group_max - fileinfo.group.size + 1)
+      size = ' ' * (@size_max - fileinfo.size.size) + fileinfo.size.to_s
+      timestamp = fileinfo.timestamp
+      puts [fileinfo.mode, nlink, owner, group, size, timestamp, name].join(' ')
+    end
+  end
+
+  def output
+    if @params[:l]
+      puts "total #{@names.map { |name| FileInfo.new(name).blocks }.sum}"
+      format_with_l_option
     else
       format_without_l_option
     end
