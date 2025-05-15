@@ -5,13 +5,21 @@ require 'etc'
 require_relative 'formatter'
 
 class Ls
-  opt = OptionParser.new
-  params = {}
-  opt.on('-a') { |v| params[:a] = v }
-  opt.on('-r') { |v| params[:r] = v }
-  opt.on('-l') { |v| params[:l] = v }
-  opt.parse(ARGV)
+  def option
+    opt = OptionParser.new
+    params = {}
+    opt.on('-a') { |v| params[:a] = v }
+    opt.on('-r') { |v| params[:r] = v }
+    opt.on('-l') { |v| params[:l] = v }
+    opt.parse(ARGV)
+    params
+  end
 
-  formatter = Formatter.new(params)
-  formatter.output # (params)
+  def format
+    formatter = Formatter.new(option)
+    formatter.output
+  end
 end
+
+ls = Ls.new
+ls.format
