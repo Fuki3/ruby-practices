@@ -5,6 +5,13 @@ require 'etc'
 require_relative 'formatter'
 
 class Ls
+  def format
+    formatter = Formatter.new(option)
+    formatter.output
+  end
+
+  private
+
   def option
     opt = OptionParser.new
     params = {}
@@ -13,11 +20,6 @@ class Ls
     opt.on('-l') { |v| params[:l] = v }
     opt.parse(ARGV)
     params
-  end
-
-  def format
-    formatter = Formatter.new(option)
-    formatter.output
   end
 end
 

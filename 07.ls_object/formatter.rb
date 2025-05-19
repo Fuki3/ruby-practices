@@ -12,6 +12,17 @@ class Formatter
     @element_number = @names.size / COL
   end
 
+  def output
+    if @params[:l]
+      puts "total #{@names.map { |name| FileInfo.new(name).blocks }.sum}"
+      format_with_l_option
+    else
+      format_without_l_option
+    end
+  end
+
+  private
+
   def bytesize_max
     @names.map { |name| name.encode('EUC-JP').bytesize }.max
   end
@@ -63,15 +74,6 @@ class Formatter
       size = ' ' * (@size_max - fileinfo.size.size) + fileinfo.size.to_s
       timestamp = fileinfo.timestamp
       puts [fileinfo.mode, nlink, owner, group, size, timestamp, name].join(' ')
-    end
-  end
-
-  def output
-    if @params[:l]
-      puts "total #{@names.map { |name| FileInfo.new(name).blocks }.sum}"
-      format_with_l_option
-    else
-      format_without_l_option
     end
   end
 end
