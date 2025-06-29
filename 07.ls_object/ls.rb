@@ -14,12 +14,12 @@ class Ls
 
   def option
     opt = OptionParser.new
-    params = {}
-    opt.on('-a') { |v| params[:a] = v }
-    opt.on('-r') { |v| params[:r] = v }
-    opt.on('-l') { |v| params[:l] = v }
+    option = {}
+    opt.on('-a') { |v| option[:a] = v }
+    opt.on('-r') { |v| option[:r] = v }
+    opt.on('-l') { |v| option[:l] = v }
     opt.parse(ARGV)
-    params
+    option
   end
 end
 

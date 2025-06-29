@@ -5,15 +5,15 @@ require_relative 'fileinfo'
 COL = 3
 
 class Formatter
-  def initialize(params)
-    @params = params
-    @names = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-    @names = @names.reverse if params[:r]
+  def initialize(option)
+    @option = option
+    @names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    @names = @names.reverse if option[:r]
     @element_number = @names.size / COL
   end
 
   def output
-    if @params[:l]
+    if @option[:l]
       puts "total #{@names.map { |name| FileInfo.new(name).blocks }.sum}"
       format_with_l_option
     else
