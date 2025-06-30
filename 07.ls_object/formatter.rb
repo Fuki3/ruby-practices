@@ -9,7 +9,7 @@ class Formatter
     @option = option
     names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
     @names = option[:r] ? names.reverse : names
-    @element_number = @names.size / COL
+    @complete_row_count = @names.size / COL
   end
 
   def output
@@ -36,17 +36,17 @@ class Formatter
   end
 
   def set_include_remainder
-    col_array_include_remainder = slice(0, ((@element_number + 1) * (@names.size / (@element_number + 1))) - 1, @element_number + 1)
-    col_array_without_remainder = slice(((@element_number + 1) * (@names.size / (@element_number + 1))), -1, @element_number + 1)
+    col_array_include_remainder = slice(0, ((@complete_row_count + 1) * (@names.size / (@complete_row_count + 1))) - 1, @complete_row_count + 1)
+    col_array_without_remainder = slice(((@complete_row_count + 1) * (@names.size / (@complete_row_count + 1))), -1, @complete_row_count + 1)
     col_array = col_array_include_remainder + col_array_without_remainder
-    Array.new((@element_number + 1)) do |m|
+    Array.new((@complete_row_count + 1)) do |m|
       col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (bytesize_max - p.encode('EUC-JP').bytesize)} " }
     end
   end
 
   def set_without_remainder
-    col_array = @names.each_slice(@element_number)
-    Array.new(@element_number) do |m|
+    col_array = @names.each_slice(@complete_row_count)
+    Array.new(@complete_row_count) do |m|
       col_array.map { |k| "#{k[m]}#{' ' * (bytesize_max - (k[m]).encode('EUC-JP').bytesize)} " }
     end
   end
