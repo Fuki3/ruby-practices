@@ -7,8 +7,8 @@ COL = 3
 class Formatter
   def initialize(option)
     @option = option
-    @names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-    @names = @names.reverse if option[:r]
+    names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    @names = option[:r] ? names.reverse : names
     @element_number = @names.size / COL
   end
 
