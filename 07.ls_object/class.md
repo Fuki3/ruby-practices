@@ -15,7 +15,6 @@
   - output
   - bytesize_max
   - slice(first, final, element_count)
-  - set_a_row
   - set_include_remainder
   - set_without_remainder
   - format_without_l_option
