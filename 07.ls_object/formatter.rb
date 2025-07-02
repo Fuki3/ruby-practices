@@ -27,7 +27,7 @@ class Formatter
   end
 
   def bytesize_max
-    @names.map { |name| name.encode('EUC-JP').bytesize }.max
+    @names.map(&:bytesize).max
   end
 
   def slice(first, final, element_count)
@@ -39,14 +39,14 @@ class Formatter
     col_array_without_remainder = slice(((complete_row_count + 1) * (@names.size / (complete_row_count + 1))), -1, complete_row_count + 1)
     col_array = col_array_include_remainder + col_array_without_remainder
     Array.new((complete_row_count + 1)) do |m|
-      col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (bytesize_max - p.encode('EUC-JP').bytesize)} " }
+      col_array.map { |k| k[m] }.compact.map { |p| "#{p}#{' ' * (bytesize_max - p.bytesize)} " }
     end
   end
 
   def set_without_remainder
     col_array = @names.each_slice(complete_row_count)
     Array.new(complete_row_count) do |m|
-      col_array.map { |k| "#{k[m]}#{' ' * (bytesize_max - (k[m]).encode('EUC-JP').bytesize)} " }
+      col_array.map { |k| "#{k[m]}#{' ' * (bytesize_max - (k[m]).bytesize)} " }
     end
   end
 
