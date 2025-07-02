@@ -58,9 +58,9 @@ class Formatter
     if @names.size <= COL
       puts set_a_row.join
     elsif (@names.size % COL).zero?
-      set_without_remainder.map { |array| puts array.map(&:to_s).join }
+      set_without_remainder.map { |name| puts name.map(&:to_s).join }
     else
-      set_include_remainder.map { |array| puts array.map(&:to_s).join }
+      set_include_remainder.map { |name| puts name.map(&:to_s).join }
     end
   end
 
