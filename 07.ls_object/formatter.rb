@@ -34,10 +34,6 @@ class Formatter
     @names[first..final].each_slice(element_count).to_a
   end
 
-  def set_a_row
-    @names.map { |name| "#{name}#{' ' * (bytesize_max - name.encode('EUC-JP').bytesize)} " }
-  end
-
   def set_include_remainder
     col_array_include_remainder = slice(0, ((complete_row_count + 1) * (@names.size / (complete_row_count + 1))) - 1, complete_row_count + 1)
     col_array_without_remainder = slice(((complete_row_count + 1) * (@names.size / (complete_row_count + 1))), -1, complete_row_count + 1)
@@ -55,13 +51,8 @@ class Formatter
   end
 
   def format_without_l_option
-    if @names.size <= COL
-      puts set_a_row.join
-    elsif (@names.size % COL).zero?
-      set_without_remainder.map { |name| puts name.map(&:to_s).join }
-    else
-      set_include_remainder.map { |name| puts name.map(&:to_s).join }
-    end
+    set_names = (@names.size % COL).zero? ? set_without_remainder : set_include_remainder
+    set_names.map { |name| puts name.map(&:to_s).join }
   end
 
   def format_with_l_option
