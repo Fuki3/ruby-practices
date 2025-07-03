@@ -38,18 +38,18 @@ class Formatter
     col_array_include_remainder = slice(0, ((complete_row_count + 1) * (@names.size / (complete_row_count + 1))) - 1, complete_row_count + 1)
     col_array_without_remainder = slice(((complete_row_count + 1) * (@names.size / (complete_row_count + 1))), -1, complete_row_count + 1)
     col_array = col_array_include_remainder + col_array_without_remainder
-    Array.new(complete_row_count + 1) do |m|
-      col_array.map { |k| k[m] }.compact.map do |p|
-        "#{p.ljust(bytesize_max)} "
+    Array.new(complete_row_count + 1) do |idx|
+      col_array.map { |col| col[idx] }.compact.map do |name|
+        "#{name.ljust(bytesize_max)} "
       end
     end
   end
 
   def set_without_remainder
     col_array = @names.each_slice(complete_row_count)
-    Array.new(complete_row_count) do |m|
-      col_array.map do |k|
-        "#{k[m].ljust(bytesize_max)} "
+    Array.new(complete_row_count) do |idx|
+      col_array.map do |col|
+        "#{col[idx].ljust(bytesize_max)} "
       end
     end
   end
