@@ -2,7 +2,7 @@
 
 require_relative 'fileinfo'
 
-COL = 4
+COL = 3
 
 class Formatter
   def initialize(option)
@@ -35,9 +35,7 @@ class Formatter
   end
 
   def set_include_remainder
-    col_array_include_remainder = slice(0, ((complete_row_count + 1) * (@names.size / (complete_row_count + 1))) - 1, complete_row_count + 1)
-    col_array_without_remainder = slice(((complete_row_count + 1) * (@names.size / (complete_row_count + 1))), -1, complete_row_count + 1)
-    col_array = col_array_include_remainder + col_array_without_remainder
+    col_array = @names.each_slice(complete_row_count + 1)
     Array.new(complete_row_count + 1) do |idx|
       col_array.map { |col| col[idx] }.compact.map do |name|
         "#{name.ljust(bytesize_max)} "
