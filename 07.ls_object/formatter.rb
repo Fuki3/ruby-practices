@@ -30,10 +30,6 @@ class Formatter
     @names.map(&:bytesize).max
   end
 
-  def slice(first, final, element_count)
-    @names[first..final].each_slice(element_count).to_a
-  end
-
   def set_include_remainder
     col_array = @names.each_slice(complete_row_count + 1)
     Array.new(complete_row_count + 1) do |idx|
