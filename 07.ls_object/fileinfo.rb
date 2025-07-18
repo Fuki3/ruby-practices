@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
-REPLACE_FILE_TYPE = {
-  '01' => 'p',
-  '02' => 'c',
-  '04' => 'd',
-  '06' => 'b',
-  '10' => '-',
-  '12' => 'l',
-  '14' => 's'
-}.freeze
-
-REPLACE_ACCESS_PRIVILEGE = {
-  '0' => '---',
-  '1' => '--x',
-  '2' => '-w-',
-  '3' => '-wx',
-  '4' => 'r--',
-  '5' => 'r-x',
-  '6' => 'rw-',
-  '7' => 'rwx'
-}.freeze
-
 class FileInfo
+  REPLACE_FILE_TYPE = {
+    '01' => 'p',
+    '02' => 'c',
+    '04' => 'd',
+    '06' => 'b',
+    '10' => '-',
+    '12' => 'l',
+    '14' => 's'
+  }.freeze
+
+  REPLACE_ACCESS_PRIVILEGE = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }.freeze
+
   def initialize(name)
     @name = name
     @file = File.stat(name)

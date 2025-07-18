@@ -2,9 +2,9 @@
 
 require_relative 'fileinfo'
 
-COL = 3
-
 class Formatter
+  COL = 3
+
   def initialize(option)
     @option = option
     names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
