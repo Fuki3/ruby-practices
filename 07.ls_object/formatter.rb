@@ -26,7 +26,7 @@ class Formatter
     @names.size / COL
   end
 
-  def bytesize_max
+  def max_bytesize
     @names.map(&:bytesize).max
   end
 
@@ -34,7 +34,7 @@ class Formatter
     col_array = @names.each_slice(complete_row_count + 1)
     Array.new(complete_row_count + 1) do |idx|
       col_array.map { |col| col[idx] }.compact.map do |name|
-        "#{name.ljust(bytesize_max)} "
+        "#{name.ljust(max_bytesize)} "
       end
     end
   end
@@ -43,7 +43,7 @@ class Formatter
     col_array = @names.each_slice(complete_row_count)
     Array.new(complete_row_count) do |idx|
       col_array.map do |col|
-        "#{col[idx].ljust(bytesize_max)} "
+        "#{col[idx].ljust(max_bytesize)} "
       end
     end
   end
@@ -54,16 +54,16 @@ class Formatter
   end
 
   def format_with_l_option
-    nlink_max = @names.map { |name| FileInfo.new(name).nlink.size }.max
-    owner_max = @names.map { |name| FileInfo.new(name).owner }.max.size
-    group_max = @names.map { |name| FileInfo.new(name).group }.max.size
-    size_max = @names.map { |name| FileInfo.new(name).size.to_s.size }.max
+    max_nlink = @names.map { |name| FileInfo.new(name).nlink.size }.max
+    max_owner = @names.map { |name| FileInfo.new(name).owner }.max.size
+    max_group = @names.map { |name| FileInfo.new(name).group }.max.size
+    max_size = @names.map { |name| FileInfo.new(name).size.to_s.size }.max
     @names.each do |name|
       fileinfo = FileInfo.new(name)
-      nlink = ' ' * (nlink_max - fileinfo.nlink.size) + fileinfo.nlink
-      owner = fileinfo.owner + ' ' * (owner_max - fileinfo.owner.size + 1)
-      group = fileinfo.group + ' ' * (group_max - fileinfo.group.size + 1)
-      size = ' ' * (size_max - fileinfo.size.size) + fileinfo.size.to_s
+      nlink = ' ' * (max_nlink - fileinfo.nlink.size) + fileinfo.nlink
+      owner = fileinfo.owner + ' ' * (max_owner - fileinfo.owner.size + 1)
+      group = fileinfo.group + ' ' * (max_group - fileinfo.group.size + 1)
+      size = ' ' * (max_size - fileinfo.size.size) + fileinfo.size.to_s
       timestamp = fileinfo.timestamp
       puts [fileinfo.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end

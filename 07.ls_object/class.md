@@ -13,7 +13,7 @@
 - Formatter
   - initialize(params)
   - output
-  - bytesize_max
+  - max_bytesize
   - set_include_remainder
   - set_without_remainder
   - format_without_l_option
