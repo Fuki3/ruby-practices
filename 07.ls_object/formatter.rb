@@ -54,16 +54,16 @@ class Formatter
   end
 
   def format_with_l_option
-    @nlink_max = @names.map { |name| FileInfo.new(name).nlink.size }.max
-    @owner_max = @names.map { |name| FileInfo.new(name).owner }.max.size
-    @group_max = @names.map { |name| FileInfo.new(name).group }.max.size
-    @size_max = @names.map { |name| FileInfo.new(name).size.to_s.size }.max
+    nlink_max = @names.map { |name| FileInfo.new(name).nlink.size }.max
+    owner_max = @names.map { |name| FileInfo.new(name).owner }.max.size
+    group_max = @names.map { |name| FileInfo.new(name).group }.max.size
+    size_max = @names.map { |name| FileInfo.new(name).size.to_s.size }.max
     @names.each do |name|
       fileinfo = FileInfo.new(name)
-      nlink = ' ' * (@nlink_max - fileinfo.nlink.size) + fileinfo.nlink
-      owner = fileinfo.owner + ' ' * (@owner_max - fileinfo.owner.size + 1)
-      group = fileinfo.group + ' ' * (@group_max - fileinfo.group.size + 1)
-      size = ' ' * (@size_max - fileinfo.size.size) + fileinfo.size.to_s
+      nlink = ' ' * (nlink_max - fileinfo.nlink.size) + fileinfo.nlink
+      owner = fileinfo.owner + ' ' * (owner_max - fileinfo.owner.size + 1)
+      group = fileinfo.group + ' ' * (group_max - fileinfo.group.size + 1)
+      size = ' ' * (size_max - fileinfo.size.size) + fileinfo.size.to_s
       timestamp = fileinfo.timestamp
       puts [fileinfo.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
