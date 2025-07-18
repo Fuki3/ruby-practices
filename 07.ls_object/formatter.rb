@@ -31,18 +31,18 @@ class Formatter
   end
 
   def set_include_remainder
-    col_array = @names.each_slice(complete_row_count + 1)
+    cols = @names.each_slice(complete_row_count + 1)
     Array.new(complete_row_count + 1) do |idx|
-      col_array.map { |col| col[idx] }.compact.map do |name|
+      cols.map { |col| col[idx] }.compact.map do |name|
         "#{name.ljust(max_bytesize)} "
       end
     end
   end
 
   def set_without_remainder
-    col_array = @names.each_slice(complete_row_count)
+    cols = @names.each_slice(complete_row_count)
     Array.new(complete_row_count) do |idx|
-      col_array.map do |col|
+      cols.map do |col|
         "#{col[idx].ljust(max_bytesize)} "
       end
     end
