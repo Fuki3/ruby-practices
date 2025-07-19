@@ -22,17 +22,11 @@ class Formatter
 
   private
 
-  def complete_row_count
-    @names.size.fdiv(COL)
-  end
-
-  def max_bytesize
-    @names.map(&:bytesize).max
-  end
-
   def set_names
-    cols = @names.each_slice(complete_row_count.ceil)
-    Array.new(complete_row_count.ceil) do |idx|
+    row_count = @names.size.fdiv(COL)
+    max_bytesize = @names.map(&:bytesize).max
+    cols = @names.each_slice(row_count.ceil)
+    Array.new(row_count.ceil) do |idx|
       cols.map do |col|
         "#{col[idx].ljust(max_bytesize)} "
       end

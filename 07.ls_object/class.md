@@ -13,8 +13,6 @@
 - Formatter
   - initialize(params)
   - output
-  - complete_row_count
-  - max_bytesize
   - set_names
   - format_without_l_option
   - format_with_l_option
