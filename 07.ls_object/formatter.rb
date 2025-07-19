@@ -23,25 +23,16 @@ class Formatter
   private
 
   def complete_row_count
-    @names.size / COL
+    @names.size.fdiv(COL)
   end
 
   def max_bytesize
     @names.map(&:bytesize).max
   end
 
-  def set_include_remainder
-    cols = @names.each_slice(complete_row_count + 1)
-    Array.new(complete_row_count + 1) do |idx|
-      cols.map { |col| col[idx] }.compact.map do |name|
-        "#{name.ljust(max_bytesize)} "
-      end
-    end
-  end
-
-  def set_without_remainder
-    cols = @names.each_slice(complete_row_count)
-    Array.new(complete_row_count) do |idx|
+  def set_names
+    cols = @names.each_slice(complete_row_count.ceil)
+    Array.new(complete_row_count.ceil) do |idx|
       cols.map do |col|
         "#{col[idx].ljust(max_bytesize)} "
       end
@@ -49,7 +40,6 @@ class Formatter
   end
 
   def format_without_l_option
-    set_names = (@names.size % COL).zero? ? set_without_remainder : set_include_remainder
     set_names.map { |name| puts name.map(&:to_s).join }
   end
 
