@@ -22,19 +22,16 @@ class Formatter
 
   private
 
-  def set_names
+  def format_without_l_option
     row_count = @names.size.fdiv(COL)
     max_bytesize = @names.map(&:bytesize).max
     cols = @names.each_slice(row_count.ceil)
-    Array.new(row_count.ceil) do |idx|
+    lines = Array.new(row_count.ceil) do |idx|
       cols.map do |col|
         "#{col[idx].ljust(max_bytesize)} "
       end
     end
-  end
-
-  def format_without_l_option
-    set_names.map { |name| puts name.map(&:to_s).join }
+    lines.map { |name| puts name.map(&:to_s).join }
   end
 
   def format_with_l_option

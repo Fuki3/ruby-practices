@@ -13,6 +13,5 @@
 - Formatter
   - initialize(params)
   - output
-  - set_names
   - format_without_l_option
   - format_with_l_option
