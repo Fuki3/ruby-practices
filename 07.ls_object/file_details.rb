@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FileInfo
+class FileDetails
   REPLACE_FILE_TYPE = {
     '01' => 'p',
     '02' => 'c',

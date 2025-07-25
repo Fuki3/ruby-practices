@@ -1,7 +1,7 @@
 - Ls
   - format
   - option
-- FileInfo
+- FileDetails
   - initialize(name)
   - mode
   - blocks

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'fileinfo'
+require_relative 'file_details'
 
 class Formatter
   COL = 3
@@ -13,7 +13,7 @@ class Formatter
 
   def output
     if @option[:l]
-      puts "total #{@names.map { |name| FileInfo.new(name).blocks }.sum}"
+      puts "total #{@names.map { |name| FileDetails.new(name).blocks }.sum}"
       format_with_l_option
     else
       format_without_l_option
@@ -35,18 +35,18 @@ class Formatter
   end
 
   def format_with_l_option
-    max_nlink = @names.map { |name| FileInfo.new(name).nlink.size }.max
-    max_owner = @names.map { |name| FileInfo.new(name).owner }.max.size
-    max_group = @names.map { |name| FileInfo.new(name).group }.max.size
-    max_size = @names.map { |name| FileInfo.new(name).size.to_s.size }.max
+    max_nlink = @names.map { |name| FileDetails.new(name).nlink.size }.max
+    max_owner = @names.map { |name| FileDetails.new(name).owner }.max.size
+    max_group = @names.map { |name| FileDetails.new(name).group }.max.size
+    max_size = @names.map { |name| FileDetails.new(name).size.to_s.size }.max
     @names.each do |name|
-      fileinfo = FileInfo.new(name)
-      nlink = ' ' * (max_nlink - fileinfo.nlink.size) + fileinfo.nlink
-      owner = fileinfo.owner + ' ' * (max_owner - fileinfo.owner.size + 1)
-      group = fileinfo.group + ' ' * (max_group - fileinfo.group.size + 1)
-      size = ' ' * (max_size - fileinfo.size.size) + fileinfo.size.to_s
-      timestamp = fileinfo.timestamp
-      puts [fileinfo.mode, nlink, owner, group, size, timestamp, name].join(' ')
+      file_details = FileDetails.new(name)
+      nlink = ' ' * (max_nlink - file_details.nlink.size) + file_details.nlink
+      owner = file_details.owner + ' ' * (max_owner - file_details.owner.size + 1)
+      group = file_details.group + ' ' * (max_group - file_details.group.size + 1)
+      size = ' ' * (max_size - file_details.size.size) + file_details.size.to_s
+      timestamp = file_details.timestamp
+      puts [file_details.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
   end
 end
