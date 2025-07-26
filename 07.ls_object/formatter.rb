@@ -24,7 +24,7 @@ class Formatter
 
   def format_without_l_option
     row_count = @names.size.fdiv(COL)
-    max_bytesize = @names.map(&:bytesize).max
+    max_bytesize = @names.max_by(&:bytesize).bytesize
     cols = @names.each_slice(row_count.ceil)
     lines = Array.new(row_count.ceil) do |idx|
       cols.map do |col|
