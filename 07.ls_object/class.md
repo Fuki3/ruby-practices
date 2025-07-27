@@ -1,6 +1,7 @@
 - Ls
   - format
   - option
+  - names
 - FileDetails
   - initialize(name)
   - mode
