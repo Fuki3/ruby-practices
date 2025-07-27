@@ -6,7 +6,7 @@ require_relative 'formatter'
 
 class Ls
   def format
-    formatter = Formatter.new(option)
+    formatter = Formatter.new(option, names)
     formatter.output
   end
 
@@ -20,6 +20,11 @@ class Ls
     opt.on('-l') { |v| option[:l] = v }
     opt.parse(ARGV)
     option
+  end
+
+  def names
+    names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    @names = option[:r] ? names.reverse : names
   end
 end
 

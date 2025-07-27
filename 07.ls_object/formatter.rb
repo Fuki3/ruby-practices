@@ -5,10 +5,9 @@ require_relative 'file_details'
 class Formatter
   COL = 3
 
-  def initialize(option)
+  def initialize(option, names)
     @option = option
-    names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-    @names = option[:r] ? names.reverse : names
+    @names = names
   end
 
   def output
