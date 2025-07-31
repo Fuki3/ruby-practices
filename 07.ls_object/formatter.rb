@@ -8,11 +8,12 @@ class Formatter
   def initialize(option, names)
     @option = option
     @names = names
+    @file_details = @names.map { |name| FileDetails.new(name) }
   end
 
   def output
     if @option[:l]
-      puts "total #{@names.map { |name| FileDetails.new(name).blocks }.sum}"
+      puts "total #{@file_details.map(&:blocks).sum}"
       format_with_l_option
     else
       format_without_l_option
@@ -33,19 +34,19 @@ class Formatter
     lines.map { |name| puts name.map(&:to_s).join }
   end
 
+  def max_size(detail)
+    @file_details.map(&detail).map(&:size).max
+  end
+
   def format_with_l_option
-    max_nlink = @names.map { |name| FileDetails.new(name).nlink.size }.max
-    max_owner = @names.map { |name| FileDetails.new(name).owner }.max.size
-    max_group = @names.map { |name| FileDetails.new(name).group }.max.size
-    max_size = @names.map { |name| FileDetails.new(name).size.to_s.size }.max
     @names.each do |name|
-      file_details = FileDetails.new(name)
-      nlink = ' ' * (max_nlink - file_details.nlink.size) + file_details.nlink
-      owner = file_details.owner + ' ' * (max_owner - file_details.owner.size + 1)
-      group = file_details.group + ' ' * (max_group - file_details.group.size + 1)
-      size = ' ' * (max_size - file_details.size.size) + file_details.size.to_s
-      timestamp = file_details.timestamp
-      puts [file_details.mode, nlink, owner, group, size, timestamp, name].join(' ')
+      file_detail = @file_details.find { |file| file.name == name }
+      nlink = ' ' * (max_size(:nlink) - file_detail.nlink.size) + file_detail.nlink
+      owner = file_detail.owner + ' ' * (max_size(:owner) - file_detail.owner.size + 1)
+      group = file_detail.group + ' ' * (max_size(:group) - file_detail.group.size + 1)
+      size = ' ' * (max_size(:size) - file_detail.size.size) + file_detail.size.to_s
+      timestamp = file_detail.timestamp
+      puts [file_detail.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
   end
 end

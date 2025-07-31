@@ -12,7 +12,8 @@
   - size
   - timestamp
 - Formatter
-  - initialize(params)
+  - initialize(option, names)
   - output
   - format_without_l_option
+  - max_size(detail)
   - format_with_l_option

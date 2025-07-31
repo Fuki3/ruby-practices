@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FileDetails
+  attr_reader :name
+
   REPLACE_FILE_TYPE = {
     '01' => 'p',
     '02' => 'c',
