@@ -44,7 +44,7 @@ class FileDetails
   end
 
   def nlink
-    @file.nlink.to_s
+    @file.nlink
   end
 
   def owner
@@ -56,7 +56,7 @@ class FileDetails
   end
 
   def size
-    @file.size.to_s
+    @file.size
   end
 
   def timestamp

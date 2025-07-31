@@ -35,16 +35,16 @@ class Formatter
   end
 
   def max_size(detail)
-    @file_details.map(&detail).map(&:size).max
+    @file_details.map { |file| file.send(detail).to_s.size }.max
   end
 
   def format_with_l_option
     @names.each do |name|
       file_detail = @file_details.find { |file| file.name == name }
-      nlink = ' ' * (max_size(:nlink) - file_detail.nlink.size) + file_detail.nlink
+      nlink = ' ' * (max_size(:nlink) - file_detail.nlink.to_s.size) + file_detail.nlink.to_s
       owner = file_detail.owner + ' ' * (max_size(:owner) - file_detail.owner.size + 1)
       group = file_detail.group + ' ' * (max_size(:group) - file_detail.group.size + 1)
-      size = ' ' * (max_size(:size) - file_detail.size.size) + file_detail.size.to_s
+      size = ' ' * (max_size(:size) - file_detail.size.to_s.size) + file_detail.size.to_s
       timestamp = file_detail.timestamp
       puts [file_detail.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
