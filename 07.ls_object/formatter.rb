@@ -1,26 +1,14 @@
 # frozen_string_literal: true
 
 require_relative 'file_details'
+require 'debug'
 
 class Formatter
   COL = 3
 
-  def initialize(option, names)
-    @option = option
+  def initialize(names)
     @names = names
-    @file_details = @names.map { |name| FileDetails.new(name) }
   end
-
-  def output
-    if @option[:l]
-      puts "total #{@file_details.map(&:blocks).sum}"
-      format_with_l_option
-    else
-      format_without_l_option
-    end
-  end
-
-  private
 
   def format_without_l_option
     row_count = @names.size.fdiv(COL)
@@ -34,13 +22,9 @@ class Formatter
     lines.map { |name| puts name.map(&:to_s).join }
   end
 
-  def max_size(detail)
-    @file_details.map { |file| file.send(detail).to_s.size }.max
-  end
-
   def format_with_l_option
     @names.each do |name|
-      file_detail = @file_details.find { |file| file.name == name }
+      file_detail = file_details.find { |file| file.name == name }
       nlink = ' ' * (max_size(:nlink) - file_detail.nlink.to_s.size) + file_detail.nlink.to_s
       owner = file_detail.owner + ' ' * (max_size(:owner) - file_detail.owner.size + 1)
       group = file_detail.group + ' ' * (max_size(:group) - file_detail.group.size + 1)
@@ -48,5 +32,15 @@ class Formatter
       timestamp = file_detail.timestamp
       puts [file_detail.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
+  end
+
+  private
+
+  def file_details
+    @names.map { |name| FileDetails.new(name) }
+  end
+
+  def max_size(detail)
+    file_details.map { |file| file.send(detail).to_s.size }.max
   end
 end

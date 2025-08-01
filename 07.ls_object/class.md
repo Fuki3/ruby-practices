@@ -1,7 +1,7 @@
 - Ls
-  - format
-  - option
+  - output
   - names
+  - option
 - FileDetails
   - initialize(name)
   - mode
@@ -12,8 +12,8 @@
   - size
   - timestamp
 - Formatter
-  - initialize(option, names)
-  - output
+  - initialize(names)
   - format_without_l_option
-  - max_size(detail)
   - format_with_l_option
+  - file_details
+  - max_size(detail)

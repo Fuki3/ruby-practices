@@ -5,12 +5,22 @@ require 'etc'
 require_relative 'formatter'
 
 class Ls
-  def format
-    formatter = Formatter.new(option, names)
-    formatter.output
+  def output
+    formatter = Formatter.new(names)
+    if option[:l]
+      puts "total #{@names.map { |name| FileDetails.new(name) }.map(&:blocks).sum}"
+      formatter.format_with_l_option
+    else
+      formatter.format_without_l_option
+    end
   end
 
   private
+
+  def names
+    names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
+    @names = option[:r] ? names.reverse : names
+  end
 
   def option
     opt = OptionParser.new
@@ -21,12 +31,6 @@ class Ls
     opt.parse(ARGV)
     option
   end
-
-  def names
-    names = option[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
-    @names = option[:r] ? names.reverse : names
-  end
 end
 
-ls = Ls.new
-ls.format
+Ls.new.output
