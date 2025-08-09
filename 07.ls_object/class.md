@@ -13,7 +13,7 @@
   - timestamp
 - Formatter
   - initialize(names)
-  - format_without_l_option
-  - format_with_l_option
+  - format
+  - format_long
   - file_details
   - max_size(detail)

@@ -8,9 +8,9 @@ class Ls
   def output
     formatter = Formatter.new(names)
     if option[:l]
-      formatter.format_with_l_option
+      formatter.format_long
     else
-      formatter.format_without_l_option
+      formatter.format
     end
   end
 

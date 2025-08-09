@@ -10,7 +10,7 @@ class Formatter
     @names = names
   end
 
-  def format_without_l_option
+  def format
     row_count = @names.size.fdiv(COL)
     max_bytesize = @names.max_by(&:bytesize).bytesize
     cols = @names.each_slice(row_count.ceil)
@@ -22,7 +22,7 @@ class Formatter
     lines.map { |name| puts name.map(&:to_s).join }
   end
 
-  def format_with_l_option
+  def format_long
     puts "total #{file_details.map(&:blocks).sum}"
     @names.each do |name|
       file_detail = file_details.find { |file| file.name == name }
