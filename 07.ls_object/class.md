@@ -2,7 +2,7 @@
   - output
   - names
   - option
-- FileDetails
+- FileDetail
   - initialize(name)
   - mode
   - blocks

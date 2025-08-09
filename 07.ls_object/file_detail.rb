@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FileDetails
+class FileDetail
   attr_reader :name
 
   REPLACE_FILE_TYPE = {

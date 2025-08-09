@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'file_details'
+require_relative 'file_detail'
 require 'debug'
 
 class Formatter
@@ -38,7 +38,7 @@ class Formatter
   private
 
   def file_details
-    @names.map { |name| FileDetails.new(name) }
+    @names.map { |name| FileDetail.new(name) }
   end
 
   def max_size(detail)
