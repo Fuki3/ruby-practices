@@ -26,11 +26,11 @@ class FileDetail
 
   def initialize(name)
     @name = name
-    @file = File.stat(name)
+    @stat = File.stat(name)
   end
 
   def mode
-    mode_eight = format('%06d', @file.mode.to_s(8))
+    mode_eight = format('%06d', @stat.mode.to_s(8))
     type = mode_eight[0..1].gsub(/../, REPLACE_FILE_TYPE)
     access_privilege = mode_eight[3..5].gsub(/\d/, REPLACE_ACCESS_PRIVILEGE)
     access_privilege[8] = access_privilege[8] == 'x' ? 't' : 'T' if mode_eight[2] == '1'
@@ -40,29 +40,29 @@ class FileDetail
   end
 
   def blocks
-    @file.blocks
+    @stat.blocks
   end
 
   def nlink
-    @file.nlink
+    @stat.nlink
   end
 
   def owner
-    Etc.getpwuid(@file.uid).name
+    Etc.getpwuid(@stat.uid).name
   end
 
   def group
-    Etc.getgrgid(@file.gid).name
+    Etc.getgrgid(@stat.gid).name
   end
 
   def size
-    @file.size
+    @stat.size
   end
 
   def timestamp
-    month = format('%2d', @file.mtime.to_s[5..6].to_i)
-    day = format('%2d', @file.mtime.to_s[8..9].to_i)
-    time = @file.mtime.to_s[11..15]
+    month = format('%2d', @stat.mtime.to_s[5..6].to_i)
+    day = format('%2d', @stat.mtime.to_s[8..9].to_i)
+    time = @stat.mtime.to_s[11..15]
     [month, day, time]
   end
 end
