@@ -23,6 +23,7 @@ class Formatter
   end
 
   def format_with_l_option
+    puts "total #{file_details.map(&:blocks).sum}"
     @names.each do |name|
       file_detail = file_details.find { |file| file.name == name }
       nlink = ' ' * (max_size(:nlink) - file_detail.nlink.to_s.size) + file_detail.nlink.to_s

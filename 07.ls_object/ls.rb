@@ -8,7 +8,6 @@ class Ls
   def output
     formatter = Formatter.new(names)
     if option[:l]
-      puts "total #{@names.map { |name| FileDetails.new(name) }.map(&:blocks).sum}"
       formatter.format_with_l_option
     else
       formatter.format_without_l_option
