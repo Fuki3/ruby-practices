@@ -18,8 +18,9 @@ class Formatter
         col[idx].ljust(max_bytesize)
       end
     end
-
-    lines.map { |name| puts name.map(&:to_s).join(' ') }
+    lines.each do |name|
+      puts name.join(' ')
+    end
   end
 
   def format_long
