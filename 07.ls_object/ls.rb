@@ -10,7 +10,7 @@ class Ls
     if option[:l]
       formatter.format_long
     else
-      formatter.format
+      formatter.format_short
     end
   end
 

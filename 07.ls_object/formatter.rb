@@ -9,7 +9,7 @@ class Formatter
     @names = names
   end
 
-  def format
+  def format_short
     row_count = @names.size.fdiv(COL)
     max_bytesize = @names.max_by(&:bytesize).bytesize
     cols = @names.each_slice(row_count.ceil)
@@ -29,8 +29,10 @@ class Formatter
       owner = file_detail.owner + ' ' * (max_size(:owner) - file_detail.owner.size + 1)
       group = file_detail.group + ' ' * (max_size(:group) - file_detail.group.size + 1)
       size = ' ' * (max_size(:size) - file_detail.size.to_s.size) + file_detail.size.to_s
-      timestamp = file_detail.timestamp
-      puts [file_detail.mode, nlink, owner, group, size, timestamp, name].join(' ')
+      month = format('%2d', file_detail.timestamp.month)
+      day = file_detail.timestamp.strftime('%e')
+      time = file_detail.timestamp.strftime('%H:%M')
+      puts [file_detail.mode, nlink, owner, group, size, month, day, time, name].join(' ')
     end
   end
 

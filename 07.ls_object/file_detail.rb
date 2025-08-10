@@ -60,9 +60,6 @@ class FileDetail
   end
 
   def timestamp
-    month = format('%2d', @stat.mtime.to_s[5..6].to_i)
-    day = format('%2d', @stat.mtime.to_s[8..9].to_i)
-    time = @stat.mtime.to_s[11..15]
-    [month, day, time]
+    @stat.mtime
   end
 end
