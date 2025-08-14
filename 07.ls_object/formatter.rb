@@ -41,7 +41,8 @@ class Formatter
   private
 
   def file_details
-    @names.map { |name| FileDetail.new(name) }
+    @file_details = @names.map { |name| FileDetail.new(name) } unless instance_variable_defined?(:@file_details)
+    @file_details
   end
 
   def max_size(detail)
