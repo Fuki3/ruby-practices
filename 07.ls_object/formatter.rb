@@ -27,10 +27,10 @@ class Formatter
     puts "total #{file_details.map(&:blocks).sum}"
     @names.each do |name|
       file_detail = file_details.find { |file| file.name == name }
-      nlink = ' ' * (max_size(:nlink) - file_detail.nlink.to_s.size) + file_detail.nlink.to_s
-      owner = file_detail.owner + ' ' * (max_size(:owner) - file_detail.owner.size + 1)
-      group = file_detail.group + ' ' * (max_size(:group) - file_detail.group.size + 1)
-      size = ' ' * (max_size(:size) - file_detail.size.to_s.size) + file_detail.size.to_s
+      nlink = file_detail.nlink.to_s.rjust(max_size(:nlink))
+      owner = file_detail.owner.ljust(max_size(:owner) + 1)
+      group = file_detail.group.ljust(max_size(:group) + 1)
+      size = file_detail.size.to_s.rjust(max_size(:size))
       month = format('%2d', file_detail.timestamp.month)
       day = file_detail.timestamp.strftime('%e')
       time = file_detail.timestamp.strftime('%H:%M')
