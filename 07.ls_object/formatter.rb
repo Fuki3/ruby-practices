@@ -10,10 +10,10 @@ class Formatter
   end
 
   def format_short
-    row_count = @names.size.fdiv(COL)
+    row_count = @names.size.ceildiv(COL)
     max_bytesize = @names.max_by(&:bytesize).bytesize
-    cols = @names.each_slice(row_count.ceil)
-    lines = Array.new(row_count.ceil) do |idx|
+    cols = @names.each_slice(row_count)
+    lines = Array.new(row_count) do |idx|
       cols.map do |col|
         col[idx].ljust(max_bytesize)
       end
