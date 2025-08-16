@@ -25,8 +25,8 @@ class Formatter
 
   def format_long
     puts "total #{file_details.map(&:blocks).sum}"
-    @names.each do |name|
-      file_detail = file_details.find { |file| file.name == name }
+    file_details.each do |file_detail|
+      name = file_detail.name
       nlink = file_detail.nlink.to_s.rjust(max_size(:nlink))
       owner = file_detail.owner.ljust(max_size(:owner) + 1)
       group = file_detail.group.ljust(max_size(:group) + 1)
