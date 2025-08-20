@@ -24,8 +24,9 @@ class Formatter
   end
 
   def format_long
-    puts "total #{file_details.map(&:blocks).sum}"
-    file_details.each do |file_detail|
+    @file_details = @names.map { |name| FileDetail.new(name) }
+    puts "total #{@file_details.map(&:blocks).sum}"
+    @file_details.each do |file_detail|
       name = file_detail.name
       nlink = file_detail.nlink.to_s.rjust(max_size(:nlink))
       owner = file_detail.owner.ljust(max_size(:owner) + 1)
@@ -40,12 +41,7 @@ class Formatter
 
   private
 
-  def file_details
-    @file_details = @names.map { |name| FileDetail.new(name) } unless instance_variable_defined?(:@file_details)
-    @file_details
-  end
-
   def max_size(detail)
-    file_details.map { |file| file.send(detail).to_s.size }.max
+    @file_details.map { |file| file.send(detail).to_s.size }.max
   end
 end
