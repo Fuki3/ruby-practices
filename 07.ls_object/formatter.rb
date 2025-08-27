@@ -36,10 +36,8 @@ class Formatter
       owner = file_detail.owner.ljust(max_owner + 1)
       group = file_detail.group.ljust(max_group + 1)
       size = file_detail.size.to_s.rjust(max_size)
-      month = format('%2d', file_detail.timestamp.month)
-      day = file_detail.timestamp.strftime('%e')
-      time = file_detail.timestamp.strftime('%H:%M')
-      puts [file_detail.mode, nlink, owner, group, size, month, day, time, name].join(' ')
+      timestamp = file_detail.timestamp.strftime('%_m %e %H:%M')
+      puts [file_detail.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
   end
 
