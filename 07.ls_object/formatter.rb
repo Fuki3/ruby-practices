@@ -26,16 +26,13 @@ class Formatter
   def format_long
     file_details = @names.map { |name| FileDetail.new(name) }
     puts "total #{file_details.map(&:blocks).sum}"
-    max_nlink = calculate_max_size(:nlink, file_details)
-    max_owner = calculate_max_size(:owner, file_details)
-    max_group = calculate_max_size(:group, file_details)
-    max_size = calculate_max_size(:size, file_details)
+    max_size = culculate_max_size(file_details)
     file_details.each do |file_detail|
       name = file_detail.name
-      nlink = file_detail.nlink.to_s.rjust(max_nlink)
-      owner = file_detail.owner.ljust(max_owner + 1)
-      group = file_detail.group.ljust(max_group + 1)
-      size = file_detail.size.to_s.rjust(max_size)
+      nlink = file_detail.nlink.to_s.rjust(max_size[:nlink])
+      owner = file_detail.owner.ljust(max_size[:owner] + 1)
+      group = file_detail.group.ljust(max_size[:group] + 1)
+      size = file_detail.size.to_s.rjust(max_size[:size])
       timestamp = file_detail.timestamp.strftime('%_m %e %H:%M')
       puts [file_detail.mode, nlink, owner, group, size, timestamp, name].join(' ')
     end
@@ -43,7 +40,9 @@ class Formatter
 
   private
 
-  def calculate_max_size(detail, file_details)
-    file_details.map { |file| file.send(detail).to_s.size }.max
+  def culculate_max_size(file_details)
+    %i[nlink owner group size].to_h do |key|
+      [key, file_details.map { |file| file.send(key).to_s.size }.max]
+    end
   end
 end
