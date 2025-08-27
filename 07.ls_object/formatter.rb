@@ -26,10 +26,10 @@ class Formatter
   def format_long
     file_details = @names.map { |name| FileDetail.new(name) }
     puts "total #{file_details.map(&:blocks).sum}"
-    max_nlink = max_size(:nlink, file_details)
-    max_owner = max_size(:owner, file_details)
-    max_group = max_size(:group, file_details)
-    max_size = max_size(:size, file_details)
+    max_nlink = calculate_max_size(:nlink, file_details)
+    max_owner = calculate_max_size(:owner, file_details)
+    max_group = calculate_max_size(:group, file_details)
+    max_size = calculate_max_size(:size, file_details)
     file_details.each do |file_detail|
       name = file_detail.name
       nlink = file_detail.nlink.to_s.rjust(max_nlink)
@@ -43,7 +43,7 @@ class Formatter
 
   private
 
-  def max_size(detail, file_details)
+  def calculate_max_size(detail, file_details)
     file_details.map { |file| file.send(detail).to_s.size }.max
   end
 end

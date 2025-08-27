@@ -15,4 +15,4 @@
   - initialize(names)
   - format_short
   - format_long
-  - max_size(detail, file_details)
+  - calculate_max_size(detail, file_details)
