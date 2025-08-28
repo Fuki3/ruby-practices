@@ -11,8 +11,10 @@
   - group
   - size
   - timestamp
-- Formatter
+- ShortFormatter
   - initialize(names)
-  - format_short
-  - format_long
+  - format
+- LongFormatter
+  - initialize(names)
+  - format
   - calculate_max_size(file_details)

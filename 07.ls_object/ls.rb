@@ -2,15 +2,16 @@
 
 require 'optparse'
 require 'etc'
-require_relative 'formatter'
+require_relative 'long_formatter'
+require_relative 'short_formatter'
 
 class Ls
   def output
-    formatter = Formatter.new(names)
+    # formatter = Formatter.new(names)
     if option[:l]
-      formatter.format_long
+      LongFormatter.new(names).format
     else
-      formatter.format_short
+      ShortFormatter.new(names).format
     end
   end
 

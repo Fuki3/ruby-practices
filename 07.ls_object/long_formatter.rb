@@ -2,28 +2,12 @@
 
 require_relative 'file_detail'
 
-class Formatter
-  COL = 3
-
+class LongFormatter
   def initialize(names)
     @names = names
   end
 
-  def format_short
-    row_count = @names.size.ceildiv(COL)
-    max_bytesize = @names.max_by(&:bytesize).bytesize
-    cols = @names.each_slice(row_count)
-    lines = Array.new(row_count) do |idx|
-      cols.map do |col|
-        col[idx].ljust(max_bytesize)
-      end
-    end
-    lines.each do |name|
-      puts name.join(' ')
-    end
-  end
-
-  def format_long
+  def format
     file_details = @names.map { |name| FileDetail.new(name) }
     puts "total #{file_details.map(&:blocks).sum}"
     max_size = culculate_max_size(file_details)
