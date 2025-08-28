@@ -13,7 +13,7 @@ class ShortFormatter
     cols = @names.each_slice(row_count)
     lines = Array.new(row_count) do |idx|
       cols.map do |col|
-        col[idx].ljust(max_bytesize)
+        col[idx].to_s.ljust(max_bytesize)
       end
     end
     lines.each do |name|
