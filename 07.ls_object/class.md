@@ -1,0 +1,20 @@
+- Ls
+  - output
+  - names
+  - option
+- FileDetail
+  - initialize(name)
+  - mode
+  - blocks
+  - nlink
+  - owner
+  - group
+  - size
+  - timestamp
+- ShortFormatter
+  - initialize(names)
+  - format
+- LongFormatter
+  - initialize(names)
+  - format
+  - calculate_max_size(file_details)
