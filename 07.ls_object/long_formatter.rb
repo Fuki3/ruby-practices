@@ -26,7 +26,8 @@ class LongFormatter
 
   def calcalate_max_size(file_details)
     %i[nlink owner group size].to_h do |key|
-      [key, file_details.map { |file| file.send(key).to_s.size }.max]
+      size = file_details.map { |file| file.send(key).to_s.size }.max
+      [key, size]
     end
   end
 end
