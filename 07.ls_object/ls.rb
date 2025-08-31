@@ -7,7 +7,6 @@ require_relative 'short_formatter'
 
 class Ls
   def output
-    # formatter = Formatter.new(names)
     if option[:l]
       LongFormatter.new(names).format
     else
