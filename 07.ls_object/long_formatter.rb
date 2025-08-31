@@ -10,7 +10,7 @@ class LongFormatter
   def format
     file_details = @names.map { |name| FileDetail.new(name) }
     puts "total #{file_details.map(&:blocks).sum}"
-    max_size = culculate_max_size(file_details)
+    max_size = calcalate_max_size(file_details)
     file_details.each do |file_detail|
       name = file_detail.name
       nlink = file_detail.nlink.to_s.rjust(max_size[:nlink])
@@ -24,7 +24,7 @@ class LongFormatter
 
   private
 
-  def culculate_max_size(file_details)
+  def calcalate_max_size(file_details)
     %i[nlink owner group size].to_h do |key|
       [key, file_details.map { |file| file.send(key).to_s.size }.max]
     end
